@@ -68,6 +68,31 @@ def draw(board):
     # return True
     return "*" not in board
 
+def log_in(Id,Pw):
+    #아이디와 비밀번호 입력 전달 받는다
+    #만약 전달 받은 아이디와 비밀번호가 log_in.txt 안에 존재한다면
+    file = open('login.txt', 'r')
+    line = file.readlines()
+
+    idd = []
+    pww = []
+    for i in range(len(line)):
+        b = line[i]
+        b = b.split()
+        if b[0] == 'Id:':
+            idd.append(b[1])
+        elif b[0] == 'Pw:':
+            pww.append(b[1])
+    if Id in idd:
+        idx = idd.index(Id)
+        if Pw == pww[idx]:
+            #return True or return False
+            return True
+        else:
+            return False
+    return False
+
+
 if __name__ == "__main__":
     board = ['*'] * 9
     player , computer = "O","X"
@@ -76,3 +101,8 @@ if __name__ == "__main__":
     display_board(board)
     print(Victory(board , computer))
     print(draw(board))
+
+
+
+
+

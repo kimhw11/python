@@ -1,23 +1,45 @@
+from math import ceil
+# ceil( )
 def solution(fees, records):
-    dict = {}
+    dict1 = {} #누적 주차 시간
+    dict2 = {} #입차 시간 {'0202': ['16:00'], '3961': ['16:00', '23:58']}
+    dict3 = {} #출차 시간 {'0202': ['18:00'], '3961': ['18:00', '23:59']}
+
     #records[6:10] > 차량번호
     #records[0:2] > 시
     #records[3:5] > 분
     #records[11:13] > 입차 or 출차
 
-
     #각 차량의 요금을 저장할 딕셔너리
+    records.sort()
     for i in range(len(records)): #'3961': 0, '0202': 0}
-        if records[i][6:10] not in dict:
-            dict[records[i][6:10]] = 0
+        if records[i][6:10] not in dict1:
+            dict1[records[i][6:10]] = []
+            dict2[records[i][6:10]] = []
+            dict3[records[i][6:10]] = []
+
+
+    for k in range(len(records)):
+        #입차 or 출차
+        if records[k][11:13] == 'IN': #입차
+            dict2[records[k][6:10]].append(records[k][0:5])
+        else: #출차
+            dict3[records[k][6:10]].append(records[k][0:5])
+
+    for j in dict1.keys():
+        if len(dict2[j]) != len(dict3[j]):
+            dict3[j].append('23:59')
+
+    #주차 시간까지 저장 완료
 
 
 
 
 
 
-    return dict
+    return
 print(solution([120, 0, 60, 591],["16:00 3961 IN","16:00 0202 IN","18:00 3961 OUT","18:00 0202 OUT","23:58 3961 IN"]))
 
 
 #올림.. >> math메소드에서 올림
+#

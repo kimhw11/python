@@ -1,9 +1,10 @@
 from math import ceil
-# ceil( )
+
 def solution(fees, records):
     dict1 = {} #누적 주차 시간
     dict2 = {} #입차 시간 {'0202': ['16:00'], '3961': ['16:00', '23:58']}
     dict3 = {} #출차 시간 {'0202': ['18:00'], '3961': ['18:00', '23:59']}
+    dict4 = {} #최종 주차 요금
 
     #records[6:10] > 차량번호
     #records[0:2] > 시
@@ -11,13 +12,16 @@ def solution(fees, records):
     #records[11:13] > 입차 or 출차
 
     #각 차량의 요금을 저장할 딕셔너리
-    records.sort()
-    for i in range(len(records)): #'3961': 0, '0202': 0}
+
+    records.sort(key=lambda x : x[6:10]) #차량번호 순으로 정렬
+    for i in range(len(records)): #{'3961': 0, '0202': 0}
         if records[i][6:10] not in dict1:
-            dict1[records[i][6:10]] = []
+            dict1[records[i][6:10]] = 0
             dict2[records[i][6:10]] = []
             dict3[records[i][6:10]] = []
+            dict4[records[i][6:10]] = 0
 
+    car = [i for i in dict1.keys()]
 
     for k in range(len(records)):
         #입차 or 출차
@@ -30,16 +34,31 @@ def solution(fees, records):
         if len(dict2[j]) != len(dict3[j]):
             dict3[j].append('23:59')
 
-    #주차 시간까지 저장 완료
+    # ------ 주차 시간 저장 -------
 
+    for i in car:
+        li1 = dict2[i]  # ['16:00'] / ['16:00', '23:58'] 입차
+        li2 = dict3[i]  # ['18:00'] / ['18:00', '23:59'] 출차
 
+        for k in range(len(li1)):
+            # 시간 계산
+            hour = int(li2[k][0:2]) - int(li1[k][0:2])
+            num = hour * 60  # 분으로 환산
+            dict1[i] += num
+            # 분 계산
+            minute = int(li2[k][3:5]) - int(li1[k][3:5])
+            dict1[i] += minute
 
+    for i in dict1:
+        if dict1[i] > fees[0]: #단위시간보다 더 길게 주차하면'
+            fee = fees[1] #기본요금 추가
+            fee += ceil((dict1[i] - fees[0]) / fees[2]) * fees[3]
+            dict4[i] += fee
+        else:
+            dict4[i] += fees[1]
 
+    result = []
+    for i in dict4.values():
+        result.append(i)
 
-
-    return
-print(solution([120, 0, 60, 591],["16:00 3961 IN","16:00 0202 IN","18:00 3961 OUT","18:00 0202 OUT","23:58 3961 IN"]))
-
-
-#올림.. >> math메소드에서 올림
-#
+    return result

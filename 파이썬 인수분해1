@@ -1,0 +1,117 @@
+from tkinter import *
+from tkinter.ttk import *
+from i import *
+
+def get_result():
+    A = int(ent_A.get())
+    B = int(ent_B.get())
+    C = int(ent_C.get())
+
+    result = calculate(A,B,C)
+    ent_result.delete(0,'end')
+    ent_result.insert(0,result)
+
+
+
+#메인창 만들기
+root = Tk()
+
+root.title('Calculater')
+root.geometry('550x300')
+
+# Entry
+ent_A = Entry(font = '맑은고딕 20')
+ent_A.place(x = 50, y = 50, width=70, height = 50)
+ent_A.insert(0,'A')
+
+text_A = Message(text = 'x² +')
+text_A.place(x = 90, y = 5, width = 100, height = 150)
+text_A.configure(font = ('맑은고딕',25))
+
+ent_B = Entry(font = "맑은고딕 20")
+ent_B.place(x = 190, y = 50,width=120, height = 50,)
+ent_B.insert(0,'B')
+
+text_B = Message(text = 'x +')
+text_B.place(x = 240, y = 5,width=100, height = 150)
+text_B.configure(font = ('맑은고딕',25),padx = 20)
+
+ent_C = Entry(font = "맑은고딕 20")
+ent_C.place(x = 340, y = 50,width=100, height = 50)
+ent_C.insert(0,'C')
+
+text_C = Message(text = '= 0')
+text_C.place(x = 430, y = 5,width=100, height = 150)
+text_C.configure(font = ('맑은고딕',25))
+
+text_y = Message(text='인수분해 :')
+text_y.place(x = 10, y = 100, width=70, height = 100)
+text_y.configure(font = ('맑은고딕',13))
+
+ent_result = Entry(font = '맑은고딕 20')
+ent_result.place(x = 80, y = 125 , width=450, height = 50)
+ent_result.insert(0,'정답이 나올 공간')
+
+#Button
+
+btn_cal = Button(text = '계산하기')
+btn_cal.place(x = 200 ,y = 200 ,width= 150, height = 70)
+btn_cal.configure(command= get_result)
+
+
+#메인 루프이벤트 처리
+root.mainloop()
+
+----------------------------------------------------
+
+
+import sympy
+
+def calculate(A,B,C):
+    # 판별식
+    D = (B**2-4*A*C)
+
+    # 서로 다른 실근을 갖는 경우(판별식이 0보다 크다면)
+    if D > 0:
+        # 근의 공식
+
+        # son1 = 근의 공식 분자 (+)
+        son1 = (-B) + sympy.sqrt(B**2-4*A*C)
+        # son2 = 근의 공식 분자 (-)
+        son2 = (-B) - sympy.sqrt(B**2-4*A*C)
+
+        # mother = 근의 공식 분모
+        mother = 2*A
+
+        # result1 = son1 나누기 mother = 근의 공식(+)
+        result1 = son1 / mother
+        # result2 = son2 나누기 mother = 근의 공식(-)
+        result2 = son2 / mother
+
+        son1=str(son1)
+        son2=str(son2)
+
+        result1=str(result1)
+        result1=result1.replace('sqrt(','√')
+        result1=result1.replace(')' , '')
+        result2=str(result2)
+        result2=result2.replace('sqrt(','√')
+        result2=result2.replace(')' , '')
+
+        return f"(X-({result1}))(X-({result2}))"
+
+    # 중근일 경우(판별식이 0일때)
+    elif D==0:
+        # son1 = 근의 공식의 분자(+)
+        son1 = (-B) + sympy.sqrt(B**2-4*A*C)
+        # mother = 근의 공식의 분모
+        mother = 2 * A
+        # result1 = son1 나누기 mother = 근의 공식(+)
+        result = son1 / mother
+        return f"(X-({result}))²"
+    # 허근일 경우(판별식이 음수일 때)
+    else:
+        return f"허근 입니다"
+
+
+

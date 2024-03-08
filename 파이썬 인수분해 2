@@ -1,0 +1,106 @@
+# def get_divisor(n):
+#     divisors = []
+#     for i in range(1,n+1):
+#         if n % i == 0:
+#             divisors.append(i)
+#             divisors.append(-i)
+#
+#     return divisors
+#
+#
+# def calculate(*args):
+#     for x in range(len(args)):
+#         if type(args[x]) != int:
+#             raise TypeError(f"calculate() argument {x} must be int, not {type(args[x]).__name__}")
+#     """
+#     TODO: 이차 방정식 계산기 만들기
+#     ax**2 + bx + c = 0 의 식에서 a,b,c,를 입력받았을 때
+#     or or 해가 없다를 출력한다.
+#     """
+#     a,b,c = args
+#     if a == 0:
+#         print(-1)
+#         return [-1,"a는 0이 될 수 없습니다."]
+#     # TODO: 판별식D(discriminant) 생성
+#     D = b ** 2 - (4 * a * c)
+#
+#     # ax**2 + bx + c = 0 의 판별식 D: b**2 - 4ac
+#     # 판별식 D > 0: 서로 다른 두 실근 =>  (dx - e)(fx - g)
+#     # a: d * f
+#     # b: d *g + e * f
+#     # c: e * g
+#     # ex)   x**2 − 3x + 2 = 0 => (x−1)(x−2)
+#     if D > 0:
+#         print(2)
+#         div_a = get_divisor(a)
+#         div_c = get_divisor(c)
+#
+#         for d in div_a:
+#             for e in div_c:
+#                 f = a / d
+#                 g = c / e
+#                 if d * g + e * f == b:
+#                     return [2,list(map(round,(d,e,f,g)))]
+#
+#     # 중근(서로 같은 두 실근)
+#     # 판별식 D = 0: 중근(서로 같은 두 실근)   =>  (dx - e)**2
+#     # ex) ax**2 + bx *+ c =0 => (dx - e) ** 2 == a: d**2, c : e**2
+#     elif D == 0:
+#         print(1)
+#         d = int(a ** 0.5)
+#         e = int(c ** 0.5)
+#         if b < 0:
+#             e = -e
+#         return [1,[d,e]]
+#
+#     # 허근(해가 없다)
+#     # 판별식 D < 0: 근이 없다.  =>  해가 없다
+#     # ex)  x**2 − 4x + 8 = 0 => 해가 없다
+#     else:
+#         print(0)
+#         return [0,"해가 없다."]
+#
+#
+# # 계산한 결과를 문자열로 만들어주는 함수
+# def get_answer(a,b,c):
+#     cnt, result = calculate(a,b,c)
+#     answer = ""
+#
+#     if cnt == 2:        # result = [d,e,f,g] or [d,f]
+#         d,e,f,g = result
+#         op1 = '+' if e > 0 else '-'
+#         if d != 1:
+#             answer += f"({d}x {op1} {abs(e)})"
+#         else:
+#             answer += f"(x {op1} {abs(e)})"
+#
+#         op2 = '+' if g > 0 else '-'
+#         if f != 1:
+#             answer += f"({f}x {op2} {abs(g)})"
+#         else:
+#             answer += f"(x {op1} {abs(g)})"
+#
+#     elif cnt == 1:
+#         d,e = result
+#         op1 = '+' if e > 0 else '-'
+#         if d != 1:
+#             answer += f"({d}x"
+#         else:
+#             answer += f"(x"
+#         if e:
+#             answer += f' {op1} {abs(e)})**2'
+#         else:
+#             answer += ")**2"
+#
+#     else:
+#         answer = result
+#
+#     return answer
+#
+#
+#
+#
+# if __name__ == "__main__":
+#     print(calculate(1,4,3))
+
+

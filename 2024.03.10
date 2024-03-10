@@ -1,0 +1,16 @@
+
+# Python3 샘플 코드 #
+
+#API
+
+import requests, json
+serviceKey = 'FFPYwqoNHe3Z+RKW5/hY9mSPLUscqSs8OwSUFx8g60v5OPm/MVpQUhaoojuk4ubknuO3zb3qWc2w6uhLNA/Gkw=='
+url = 'http://apis.data.go.kr/B552584/ArpltnStatsSvc/getCtprvnMesureLIst'
+params ={'serviceKey' : serviceKey, 'returnType' : 'json', 'numOfRows' : '100', 'pageNo' : '1', 'itemCode' : 'PM10', 'dataGubun' : 'HOUR', 'searchCondition' : 'WEEK' }
+
+response = requests.get(url, params=params)
+data = json.loads(response.content)['response']['body']['items'][0]
+gyeonggi = data['gyeonggi']
+incheon = data['incheon']
+
+print(f"gyeonggi = {gyeonggi}, incheon = {incheon}")

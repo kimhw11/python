@@ -1,0 +1,21 @@
+def solution(people, limit):
+    people.sort() #[50, 50, 70, 80]
+    result = 0
+
+    weight = 0  # 현재 탑승 해있는 무게
+    for i in people:
+        print(i , weight , result)
+        if limit - weight > i: # 태울 수 있는 무게 >= 구할 사람의 무게 > 현재 사람을 태울 수 있을때
+            weight += i #현재 사람의 무게 추가
+
+        else: #limit - weight <= i / 태울 수 없다면
+            result += 1 #구명보트 수 추가
+            weight = 0 #구명보트 잔여 무게 초기화
+            continue
+
+
+    return result
+
+
+
+print(solution([70, 80, 50],100))

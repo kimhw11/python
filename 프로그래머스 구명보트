@@ -1,21 +1,25 @@
 def solution(people, limit):
-    people.sort() #[50, 50, 70, 80]
-    result = 0
+    people.sort(reverse=True) #[80, 70, 50, 50] 무거운 순으로 정렬
 
-    weight = 0  # 현재 탑승 해있는 무게
+    boat = []
+    idx = 0
     for i in people:
-        print(i , weight , result)
-        if limit - weight > i: # 태울 수 있는 무게 >= 구할 사람의 무게 > 현재 사람을 태울 수 있을때
-            weight += i #현재 사람의 무게 추가
+        if i > limit // 2: #최대 인원 2명
+            boat.append(i)
+            idx += 1
 
-        else: #limit - weight <= i / 태울 수 없다면
-            result += 1 #구명보트 수 추가
-            weight = 0 #구명보트 잔여 무게 초기화
-            continue
+    #boat = [80,70]
+    while idx < len(people):
+        for i in range(len(boat)):
+            if boat[i] + people[idx] <= limit:
+                boat[i] += people[idx]
+                idx += 1
+            else:
+                boat.append(people[idx])
+
+    return len(boat)
 
 
-    return result
 
 
-
-print(solution([70, 80, 50],100))
+print(solution([70, 50, 80, 50],100))

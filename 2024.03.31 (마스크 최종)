@@ -1,0 +1,147 @@
+import tkinter as tk
+import tkinter.ttk as ttk
+import PIL
+from  PIL import ImageTk, Image
+import requests, json
+from math import ceil
+
+window = tk.Tk()                    # 메인 창
+window.title("미세먼지 마스크")       # 프로그램 타이틀
+window.geometry("440x220+100+100")  # geometry("가로x세로+x좌표+y좌표") : 해당 크기, 좌표에 창 최초 생성
+window.resizable(False,False)       # resizable(True,False): 창의 크기를 변경시킬 지 정해주는 내용(True: 가능, False: 불가능),
+
+# TODO: 0. 지역 구분하기
+Frame1 = tk.Frame(window, relief="solid", bd=1,width=250,height=130)
+Frame1.place(x = 10,y = 10)
+
+Frame2 = tk.Frame(window,relief="solid",bd=1)
+Frame2.place(x=260,y=10,width=160 ,height=130)
+
+Frame3 = tk.Frame(window, relief="solid", bd=1,width=410,height=70)
+Frame3.place(x = 10,y = 140)
+
+
+# TODO: 1. 지역선택할 수 있는 버튼(버튼 클릭시, 각 지역들(선택지)가 나오고 클릭하면 해당 선택지가 결정이 되는 형태)
+area = ['서울', '부산', '대구', '인천', '광주', '대전', '울산', '경기', '강원', '충북', '충남', '전북', '전남', '경북', '경남', '제주']
+area_box = ttk.Combobox(Frame1,values=area)
+area_box.place(x = 15, y = 5, width = 130,height = 30)
+area_box.set("지역을 선택하시오.")
+
+# TODO: 2. 미세먼지, 초미세먼지, 질병 감염 수치 증가폭등의 데이터를 표현할 공간(TEXT, 버튼 클릭시 데이터 표현, 기본은 주제에 대해서만 )
+pm10_label = tk.Label(Frame2, text="미세먼지: ",relief='solid',bd=1,anchor='w',padx=5)
+pm10_label.place(x=5,y=10,width=140,height= 30)
+
+pm25_label = tk.Label(Frame2, text="초미세먼지: ",relief='solid',bd=1,anchor='w',padx=5)
+pm25_label.place(x=5,y=50,width=140,height= 30)
+
+disease_label= tk.Label(Frame2, text="질병수치: ",relief='solid',bd=1,anchor='w',padx=5)
+disease_label.place(x=5,y=90,width=140,height= 30)
+
+# TODO: 3. 미세먼지, 초미세먼지 기준표를 담아줄 공간(TEXT)
+pm_standard = """
+미세먼지: 0~30(좋음) 31~80(보통) 81~150(나쁨) 151이상(매우나쁨)
+초미세먼지: 0~15(좋음) 16~50(보통) 51~100(나쁨) 101이상(매우나쁨)"""
+pm_standard_label = tk.Label(Frame3, text=pm_standard)
+pm_standard_label.place(x = 0,y = 0)
+
+# TODO: 4. 마스크 이미지를 보여줄 공간
+mask_label = tk.Label(Frame1,background='white')
+mask_label.place(x = 15,y = 40, width = 210, height = 80)
+
+
+# TODO: 5. 결과값 보여주기 활성화 버튼
+btn_play = tk.Button(Frame1, text="실행")
+btn_play.place(x = 155, y = 5, width = 70, height=30)
+
+def get_area():
+    value_area = area_box.get()
+    return value_area
+
+dict = {'서울': 'seoul', '부산': 'busan', '대구': 'daegu', '인천': 'incheon', '광주': 'gwangju', '대전': 'daejeon', '울산': 'ulsan',
+            '경기': 'gyeonggi', '강원': 'gangwon', '충북': 'chungbuk', '충남': 'chungnam', '전북': 'jeonbuk', '전남': 'jeonnam',
+            '경북': 'gyeongbuk', '경남': 'gyeongnam', '제주': 'jeju'}
+
+# --> 미세먼지 농도를 가져올 함수에 지역값 전달
+serviceKey = 'FFPYwqoNHe3Z+RKW5/hY9mSPLUscqSs8OwSUFx8g60v5OPm/MVpQUhaoojuk4ubknuO3zb3qWc2w6uhLNA/Gkw=='
+
+def get_pm():
+    value_area = get_area()
+    new_area = dict[value_area] #전달받은 지역값을 영어로 바꾼값
+
+    data_pm = []
+    #선택한 지역의 미세먼지, 초미제먼지값을 호출
+    url = 'http://apis.data.go.kr/B552584/ArpltnStatsSvc/getCtprvnMesureLIst'
+    #미세먼지 정보 호출
+    params = {'serviceKey': serviceKey, 'returnType': 'json', 'numOfRows': '100', 'pageNo': '1', 'itemCode': 'PM10',
+              'dataGubun': 'HOUR', 'searchCondition': 'WEEK'}
+    response = requests.get(url, params=params)
+    data_PM10 = json.loads(response.content)['response']['body']['items'][0][new_area]
+    data_pm.append(data_PM10)
+    if 0 <= int(data_PM10) <= 30:
+        data_pm.append(0)
+    elif 31 <= int(data_PM10) <= 80:
+        data_pm.append(1)
+    elif 81 <= int(data_PM10) <= 150:
+        data_pm.append(2)
+    else:
+        data_pm.append(3)
+
+    params2 = {'serviceKey': serviceKey, 'returnType': 'json', 'numOfRows': '100', 'pageNo': '1', 'itemCode': 'PM25',
+               'dataGubun': 'HOUR', 'searchCondition': 'WEEK'}
+    response2 = requests.get(url, params=params2)
+    data_PM25 = json.loads(response2.content)['response']['body']['items'][0][new_area]
+    data_pm.append(data_PM25)
+    if 0 <= int(data_PM25) <= 15:
+        data_pm.append(0)
+    elif 16 <= int(data_PM25) <= 50:
+        data_pm.append(1)
+    elif 51 <= int(data_PM25) <= 100:
+        data_pm.append(2)
+    else:
+        data_pm.append(3)
+    return data_pm
+
+dict_disease = {'서울': '11', '부산': '26', '대구': '27', '인천': '28', '광주': '29', '대전': '30', '울산': '31',
+            '경기': '41', '강원': '42', '충북': '43', '충남': '44', '전북': '45', '전남': '46',
+            '경북': '47', '경남': '48', '제주': '49'}
+
+def get_disease():
+    value_area = get_area()
+    new_area = dict_disease[value_area] ##전달받은 지역값을 지역코드로 바꾼값
+
+    url = 'http://apis.data.go.kr/B550928/dissForecastInfoSvc/getDissForecastInfo'
+    params3 = {'serviceKey': serviceKey, 'numOfRows': '10', 'pageNo': '1', 'type': 'json', 'dissCd': '1', 'znCd': new_area}
+
+    response3 = requests.get(url, params=params3).text
+    result = json.loads(response3)
+    data_disease = result['response']['body']['items'][0]['risk']
+    return data_disease
+
+def show_mask():
+    PM_10 = get_pm()[0] #전달받은 미세먼지 수치 값
+    PM_20 = get_pm()[2] #전달받은 초미세먼지 수치 값
+    disease = get_disease()
+
+    total_num = ceil((get_pm()[1] + get_pm()[3] + get_disease()) / 3)
+
+    mask_image = Image.open(f'mask_{total_num}.png')
+    resized_image = mask_image.resize((210,80))
+    img = ImageTk.PhotoImage(resized_image)
+    mask_label.config(image=img)
+    mask_label.image = img
+
+    pm10_label2 = tk.Label(pm10_label, text= PM_10, relief= 'solid', bd=0)
+    pm10_label2.place(x=58, y=5)
+
+    pm25_label2 = tk.Label(pm25_label, text= PM_20, relief= 'solid', bd =0)
+    pm25_label2.place(x=70, y=5)
+
+    disease_label2 = tk.Label(disease_label, text= disease, relief='solid', bd=0)
+    disease_label2.place(x=58, y=5)
+
+btn_play.config(command = get_area)
+btn_play.config(command = get_pm)
+btn_play.config(command = get_disease)
+btn_play.config(command = show_mask)
+
+window.mainloop()  # 프로그램을 종료될때까지 유지

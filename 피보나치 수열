@@ -1,0 +1,59 @@
+피보나치 보고서
+--------------------------------------------------------------
+수열 개념
+피보나치 개념
+> 코드 작성 이유
+
+코드 예시
+- 일반함수 구현 방식
+- 재귀함수 구현 방식
+> 재귀 방식은 n값 즉 원하는 값의 크기가 커질수록 값을 얻기까지 
+  시간이 오래 걸림, 하지만 이를 해결할 방법이 있다
+- 메모이제이션 구현 방식 (DP)
+- 람다 방식1,2
+
+시각화..까지? (matplotlib)
+
+마무리
+
+--------------------------------------------------------------
+https://richwind.co.kr/3
+--------------------------------------------------------------
+
+import time
+#
+def fib(n): #n = 구하려는 항
+    if n <= 1: return n #0항부터 1
+    else: return fib(n-1) + fib(n-2)
+
+start = time.time()
+result = fib(int(input("구하려는 n번째 항을 입력하시오: ")))
+print(f"실행 시간: {round(time.time() - start)}, 결과값: {result}")
+
+def memoization_fib(n):
+    arr = [0,1] + [0] * (n-1)
+    for i in range(2,n+1):
+        arr[i] = arr[i-1] + arr[i-2]
+    return arr[n]
+
+start = time.time()
+result2 = memoization_fib(int(input("구하려는 n번째 항을 입력하시오: ")))
+print(f"실행 시간: {round(time.time() - start)}, 결과값: {result2}")
+
+------------------------------------------------------------
+import matplotlib.pyplot as plt
+import numpy as np
+n = int(input())
+fib = [0,1] + [0] * (n-1)
+for i in range(2,n+1):
+    fib[i] = fib[i-1] + fib[i-2]
+li2 = range(0,n+1)
+data_dict = {'y': fib, 'x':li2}
+plt.plot('x','y',data=data_dict)
+plt.show()
+
+
+
+
+
+

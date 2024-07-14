@@ -1,0 +1,101 @@
+# 모티프의 가능한 모든 변형을 나타내기 위해, 단백질 데이터베이스 PROSITE는 하나 이상의 단위가 대시(-)로 구분된 패턴을 사용합니다.
+# 예를 들어, [AC]-x-V-x-{ED}와 같은 패턴이 있습니다. 각 단위는 모티프의 특정 위치에 어떤 문자가 올 수 있는지를 설명합니다. 네 가지 다른 단위 표기법이 있습니다:
+# 대문자 글자 (예: V)는 해당 위치에 오직 이 글자만 올 수 있음을 나타냅니다.
+# 소문자 글자 x는 해당 위치에 어떤 글자든 올 수 있음을 나타냅니다.
+# 중괄호 안에 있는 문자는 해당 위치에 이 문자들이 올 수 없음을 나타냅니다 (예: {ED}는 E나 D가 올 수 없음을 의미).
+# 대괄호 안에 있는 문자는 해당 위치에 이 문자들 중 하나가 올 수 있음을 나타냅니다 (예: [AC]는 A나 C가 올 수 있음을 의미).
+# 패턴 p와 문자열 s가 주어질 때, s가 패턴 p에 일치하는지를 결정하는 함수를 작성하세요. 패턴 매칭은 문자열 s의 대소문자를 구별하지 않아야 합니다.
+# 또한, 문자열의 길이가 패턴의 단위 수와 다르면 일치하지 않습니다.
+
+# unit 함수:
+# 입력: 문자열 u (str).
+# 설명: 문자열 u가 단일 유닛 패턴을 설명하지 않으면 "invalid pattern" 메시지를 가진 AssertionError를 발생시킵니다. 그렇지 않으면,
+# 해당 유닛과 일치하는 알파벳의 모든 대문자 문자열을 알파벳 순서대로 반환합니다. 반환된 문자열에는 중복 문자가 없어야 합니다.
+def unit(u):
+    #문자열 u의 길이가 1이 아닐때 오류 발생
+    if len(u) != 1 and u[0] != '{' and u[0] != '[':
+        raise AssertionError("invalid pattern")
+    #u가 대문자일때
+    if u.isupper() and u[0] != '{' and u[0] != '[':
+        return u
+    #u가 소문자일떄
+    elif u == 'x':
+        return 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
+    #u가 중괄호일때
+    if u[0] == '{':
+        s = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
+        s2 = ''
+        for i in s:
+            if i not in u:
+                s2 += i
+        return s2
+    #u가 대괄호일때
+    elif u[0] == '[':
+        li = []
+        for i in u[1:len(u)-1]:
+            if i not in li:
+                li.append(i)
+        li.sort()
+        s = ''
+        for k in li:
+            s += k
+        return s
+
+# expand 함수:
+# 입력: 패턴 p (str).
+# 설명: 패턴 p의 각 유닛에 대해 해당 유닛과 일치하는 알파벳의 모든 대문자 문자열을 알파벳 순서대로 나열하고 중복 문자가 없는 문자열 리스트를 반환합니다.
+def expand(p):
+      n_p = p.split('-')
+      li = []
+      for i in n_p:
+            li.append(unit(i))
+      return li
+
+# # ismotif 함수:
+# # 입력: 두 개의 인수: 𝑖) 패턴 p (str) 및 𝑖𝑖) 문자열 m (str).
+# # 설명: 문자열 m이 패턴 p와 일치하는지를 나타내는 부울 값 (bool)을 반환합니다. 패턴 일치는 문자열 m의 대소문자를 구분하지 않습니다. 문자열이 패턴의 유닛 수와 다른 경우에는 일치하지 않습니다.
+def ismotif(p,m):
+    li = expand(p)
+    if len(li) != len(m):
+        return False
+    for i in range(len(m)):
+        if m[i] not in li[i]:
+            return False
+        else:
+            return True
+
+#
+# # motifs 함수:
+# # 입력: 두 개의 인수: 𝑖) 패턴 p (str) 및 𝑖𝑖) 문자열 s (str).
+# # 설명: 문자열 s에서 패턴 p와 일치하는 모든 모티프를 포함하는 집합 (set)을 반환합니다. 각 모티프는 두 요소로 구성된 튜플 (tuple)로 표현됩니다: 𝑖) 모티프의 첫 번째 문자의 위치 (int) 및 𝑖𝑖)
+# # 모티프의 문자열 (str). 패턴 일치는 문자열 s의 대소문자를 구분하지 않습니다. 문자열의 문자 위치는 왼쪽에서 오른쪽으로 0부터 시작합니다.
+def motifs(p,s):
+
+
+if __name__ == "__main__":
+    # print(unit('V'))
+    # 'V'
+    # print(unit('x'))
+    # 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
+    # print(unit('[DJINN]'))
+    # 'DIJN'
+    # print(unit('{SATAN}'))
+    # 'BCDEFGHIJKLMOPQRUVWXYZ'
+    # print(unit('abc'))
+    # Traceback(most recent call last):
+    # AssertionError:
+
+    # print(expand('[DJINN]-x-V-x-{SATAN}'))
+      #['DIJN', 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'V', 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'BCDEFGHIJKLMOPQRUVWXYZ']
+
+    # print(ismotif('[DJINN]-x-V-x-{SATAN}', 'DEVIL'))
+    # #True
+    # print(ismotif('[DJINN]-x-V-x-{SATAN}', 'dive'))
+    # #False / 글자수 불일치
+    # print(ismotif('[DJINN]-x-V-x-{SATAN}', 'SATAN'))
+    # #False /
+
+    print(motifs('[DJINN]-x-V-x-{SATAN}', 'GNFLEKVRMYPKLVDEVILFLHQDFPSDHMYAKVSATPVPKTPPVPWLLGTSNKSAKLAI'))
+    #{(14, 'DEVIL')}
+    print(motifs('[DIL]-x-{AEIOU}-[AEIOU]-x-x-[ORS]', 'fanhymkkcllnpwsdetailslmmipiedqcwwffvluciferrhaqcnhgqdyytspmhinfernodkwcfiyveagp'))
+    #{(15, 'details'), (37, 'lucifer'), (61, 'inferno')}

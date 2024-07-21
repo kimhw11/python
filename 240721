@@ -1,0 +1,133 @@
+# Programming assignment 3: A box code (6 points) ----------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+# code = ('0 hde', '1 b', '1 d', '2 fcah', '3 gfac', '4 bgf', '5 eah', '6 ghfc', '6 chgb', '7 afh', '7 ab', '8 fhcaeg', '9 eafh', '9 ebfa')
+
+# read_box_code 함수
+def read_box_code(code):
+    dict = {}
+    for i in code:
+        i = i.split()
+        #------
+        li = []
+        s = ''
+        for j in i[1]:
+            li.append(j)
+        li.sort()
+        for k in li:
+            s += k
+        if i[0] not in dict:
+            dict[i[0]] = {s}
+        else:
+            dict[i[0]] |= {s}
+    return dict
+# 입력: 문자열 튜플, 각 문자열은 0부터 9까지의 숫자가 각각 어떻게 표현될 수 있는지를 문서화합니다.
+# 출력: 숫자 (str)를 해당 숫자의 모든 형태 (str)가 포함된 알파벳 순서의 집합(set)으로 매핑하는 딕셔너리(dict)입니다.
+# 이 딕셔너리는 상자 코드(box code)의 표현이라고 합니다.
+
+S = 'ABCDEFGHIJKLMNOPQRSTUVWSYZ'
+s = 'abcdefghijklmnopqrstuvwxyz'
+
+# letter2code 함수
+import random
+def letter2code(letter, box_code):
+    if letter.isupper():
+        num = str(S.find(letter) + 1)
+    else:
+        num = str(s.find(letter) + 1)
+
+    def n_s(num, box_code):
+        di = read_box_code(code)[num]
+        d = di.pop()
+        li = [i for i in d]
+        n_l = random.sample(li, len(li))
+        n_s = ''
+        for i in n_l:
+            n_s += i
+        return n_s
+
+    if len(num) == 1:
+        return n_s(num, read_box_code(code))
+
+    else:
+        num1 = num[0:len(num)//2]
+        n_s1 = n_s(num1, read_box_code(code))
+        num2 = num[len(num)//2:]
+        n_s2 = n_s(num2, read_box_code(code))
+        return n_s1 + '-' + n_s2
+# 입력: 문자 l (str)과 상자 코드 B (딕셔너리).
+# 출력: 상자 코드 B에 따라 문자 l을 인코딩한 결과 (str)를 반환합니다. 각 숫자는 가능한 모든 형태 중 하나로 무작위로 선택되어야 합니다.
+# 문자 l: 'x' => 알파벳에서 x가 24번째 문자 => '24'=> '2': 'acfh', 4: 'bgf'를 '-'으로 연결해서 가져온다. 단 가져올 때 문자열의 순서를 랜덤하게 가져온다.
+# result : 'acfh-bgf' => 'hfac-bfg'
+
+
+# code2letter 함수
+def code2letter(letter,box_code):
+    pass
+# 입력: 인코딩된 문자 l (str)과 인코딩에 사용된 상자 코드 B (딕셔너리).
+# 출력: 숫자가 가능한 모든 형태 중 하나로 표현되며, 형태의 세그먼트는 임의의 순서로 나열될 수 있습니다. 원래의 문자 (str; 대문자)를 반환합니다.
+
+
+# encode 함수
+def encode(message, box_code):
+    li= []
+    result = ''
+    for i in message:
+        li.append(i)
+    for k in li:
+        if k.isalpha():
+            n_s = letter2code(k,read_box_code(code))
+            result += n_s + ' '
+    return result
+
+# 입력: 메시지 (str)와 상자 코드 B (딕셔너리 표현).
+# 출력: 메시지의 각 숫자를 가능한 모든 형태 중 하나로 인코딩한 결과 (str)를 반환합니다. 메시지에 포함된 문자만 인코딩해야 합니다.
+
+
+# decode 함수
+def decode(encoded_message, box_code):
+    pass
+# 입력: 인코딩된 메시지 (str)와 해당 인코딩에 사용된 상자 코드 B (딕셔너리).
+# 출력: 숫자가 가능한 모든 형태 중 하나로 표현되며, 형태의 세그먼트는 임의의 순서로 나열될 수 있습니다. 원래의 메시지 문자열 (str; 대문자)을 반환합니다.
+# 모든 함수는 유효한 인수만 전달된다고 가정하며, 이를 명시적으로 확인할 필요는 없습니다.
+
+
+if __name__ == "__main__":
+    code = ('0 hde', '1 b', '1 d', '2 fcah', '3 gfac', '4 bgf', '5 eah', '6 ghfc', '6 chgb', '7 afh', '7 ab', '8 fhcaeg', '9 eafh', '9 ebfa')
+    box_code = read_box_code(code)
+    # print(box_code)
+    # {'0': {'deh'}, '1': {'b', 'd'}, '2': {'acfh'}, '3': {'acfg'}, '4': {'bfg'}, '5': {'aeh'},
+    # '6': {'bcgh', 'cfgh'},'7': {'afh', 'ab'}, '8': {'acefgh'}, '9': {'abef', 'aefh'}}
+    #
+    # print(box_code['0'])
+    # {'deh'}
+    #
+    # print(box_code['1'])
+    # {'b', 'd'}
+    #
+    # print(box_code['9'])
+    # {'abef', 'aefh'}
+    #
+    # print(letter2code('H', box_code))
+    # 'fecgha'
+    #
+    # print(letter2code('x', box_code))
+    # 'hfac-bfg'
+    #
+    # print(code2letter('fecgha', box_code))
+    # 'H'
+    #
+    # print(code2letter('hfac-bfg', box_code))
+    # 'X'
+    #
+    # print(encode('And now for something completely different!', box_code))
+    # 'b b-bgf fbg d-bfg b-hae afhc-fagc bhgc b-eha b-hfceag d-feha d-hae b-agfc hae afhc-edh ghecfa fahe d-fgb ab gcaf b-aeh d-gfca d-gcbh d-chfa eah cahf-hed
+
+    # print(decode(
+    #     'b b-bgf fbg d-bfg b-hae afhc-fagc bhgc b-eha b-hfceag d-feha d-hae b-agfc hae afhc-edh ghecfa fahe d-fgb ab gcaf b-aeh d-gfca d-gcbh d-chfa eah cahf-hed eah d-acfh hfac-hea fbg fbea ghcb chgb eha b-cahfeg hae b-bgf hcfa-hed',
+    #     box_code))
+    # 'ANDNOWFORSOMETHINGCOMPLETELYDIFFERENT'
+    #
+    # print(decode(
+    #     'd d-bgf bgf d-fgb d-hea ahcf-cfag cgfh d-ahe d-cgfeha b-fbae b-aeh b-fgac ahe afhc-ehd afghec fhea b-bfg ba cagf b-ahe d-cagf b-hgbc b-chfa aeh afhc-hde hae d-chaf cahf-hea fgb ehaf cgbh chgb hae b-aefcgh aeh d-bfg fach-hed',
+    #     box_code))
+    # 'ANDNOWFORSOMETHINGCOMPLETELYDIFFERENT'

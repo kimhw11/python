@@ -131,3 +131,46 @@ if __name__ == "__main__":
     #     'd d-bgf bgf d-fgb d-hea ahcf-cfag cgfh d-ahe d-cgfeha b-fbae b-aeh b-fgac ahe afhc-ehd afghec fhea b-bfg ba cagf b-ahe d-cagf b-hgbc b-chfa aeh afhc-hde hae d-chaf cahf-hea fgb ehaf cgbh chgb hae b-aefcgh aeh d-bfg fach-hed',
     #     box_code))
     # 'ANDNOWFORSOMETHINGCOMPLETELYDIFFERENT'
+
+
+-------------------------------------------------------------------------------------------
+# Programming assignment 3: A box code (6 points) ----------------------------------------------------------------------------------------------------------------------------------------------------------------------
+# read_box_code 함수
+def read_box_code(code):
+    result = {}
+    for co in code: # '0 fds'
+        k,v = co.split()
+        v = ''.join(sorted(v))
+        if k in result:
+            result[k].add(v)
+        else:
+            result[k] = {v}
+    return result
+
+
+alphabet = " abcdefghijklmnopqrstuvwxyz"
+
+def letter2code(letter, 
+def code2letter(letter,box_code):
+    num = ""
+    for let in letter.split('-'):   # let : fecgha
+        l = ''.join(sorted(let))
+        for k,vals in box_code.items():
+            if l in vals:
+                num += k
+                break
+    return alphabet[int(num)].upper()
+
+
+def encode(message, box_code):
+    result = ""
+    for m in message:
+        if not m.isalpha(): continue
+        result += letter2code(m,box_code) + ' '
+    return result
+
+def decode(encoded_message, box_code):
+    result = ""
+    for m in encoded_message.split():
+        result += code2letter(m,box_code)
+    return result

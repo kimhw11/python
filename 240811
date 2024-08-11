@@ -1,0 +1,110 @@
+from fractions import Fraction
+"""
+word_fraction함수: 문자열 s와 Fraction을 입력받아 입력받은 문자열의 Fraction만큼의 부분을 리턴
+만약 문자열의 Fraction만큼 분리할 수 없다면 AssertionError를 발생시키고 invalid fraction이라는 메시지를 발생시켜라
+ex) word_fraction("word",Fraction(2,3)) => AssertionError: invalid fraction
+
+combine함수: 문자열들이 들어있는 리스트와 Fraction들이 들어있는 리스트를 입력받아, 각 문자열별로 Fraction만큼의 부분을 모두 연결시켜 
+하나의 문자열로 만들어 리턴한다.
+
+decompose함수: 문자열로 이루어진 질문을 받아 Fraction들이 담긴 리스트와 문제에 사용할 문자열들이 담긴 리스트를 튜플로 리턴하라
+
+answer함수: 문자열로 이루어진 질문을 넘겨받고, 이에 해당하는 정답을 문자열로 리턴하라
+"""
+def word_fraction(s,Fraction):
+    f = str(Fraction)
+    idx = f.index('/')
+    son = int(f[:idx])
+    mom = int(f[idx+1:])
+    if len(s) % mom != 0:
+        raise AssertionError("invalid fraction")
+
+    if son > 0: #분자가 양수일때
+        #약분 X
+        if mom == len(s):
+            return s[:son]
+        else:
+            n = len(s) // mom * son
+            return s[:n]
+
+    else: #분자가 음수일때
+        #약분 X
+        if mom == len(s):
+            s = s[::-1]
+            s = s[:-son]
+            s = s[::-1]
+            return s
+        else:
+            n = -(len(s) // mom * son)
+            s = s[::-1]
+            s = s[:n]
+            s = s[::-1]
+            return s
+
+def combine(l_s,l_Fraction):
+    result = ''
+    for i in range(len(l_s)):
+        result += word_fraction(l_s[i],l_Fraction[i])
+    return result
+
+def decompose(query):
+    query = query.replace('What is', ' ').replace('and', ' ').replace(',', ' ').replace('?', ' ').split()
+    l_s = []
+    l_Fraction = []
+    for i in range(0,len(query),2):
+        son , mom = map(int,query[i].split('/'))
+        l_Fraction.append(Fraction(son,mom))
+        l_s.append(query[i+1])
+    return (l_s,l_Fraction)
+
+def answer(query):
+    query = decompose(query)
+    l_s = query[0]
+    l_Fraction = query[1]
+    return combine(l_s,l_Fraction)
+
+
+
+if __name__ == "__main__":
+    # print(Fraction(4,7))  # 4/7
+    # print(Fraction(2,4))  # 1/2
+
+    print(word_fraction('wallaby', Fraction(4, 7)))  # 4/7
+    'wall'
+    print(word_fraction('parakeet', Fraction(2, 8)))  # 1/4
+    'pa'
+    print(word_fraction('perch', Fraction(3, 5)))  # 3/5
+    'per'
+    print(word_fraction('ALPACA', Fraction(-1, 3)))  # -1/3
+    'CA'
+    print(word_fraction('PARTRIDGE', Fraction(-7, 9)))  # -7/9
+    'RTRIDGE'
+    # print(word_fraction('manatee', Fraction(1, 2)))  # 1/2
+    # Traceback(most recent call last): AssertionError: invalid fraction
+
+    print(combine(['wallaby', 'parakeet', 'perch'], [Fraction(4, 7), Fraction(1, 4), Fraction(3, 5)]))
+    # 'wallpaper'
+    #
+    print(combine(['ALPACA', 'PARTRIDGE'], [Fraction(-1, 3), Fraction(-7, 9)]))
+    # 'CARTRIDGE'
+    #
+    print(combine(['Manatee', 'cheetah', 'hamster'], [Fraction(3, 7), Fraction(3, 7), Fraction(-4, 7)]))
+    # 'Manchester'
+
+    print(decompose('What is 4/7 wallaby, 1/4 parakeet and 3/5 perch?'))
+    # (['wallaby', 'parakeet', 'perch'], [Fraction(4, 7), Fraction(1, 4), Fraction(3, 5)])
+
+    print(decompose('What is -1/3 ALPACA and -7/9 PARTRIDGE?'))
+    # (['ALPACA', 'PARTRIDGE'], [Fraction(-1, 3), Fraction(-7, 9)])
+
+    print(decompose('What is 3/7 Manatee, 3/7 cheetah and -4/7 hamster?'))
+    (['Manatee', 'cheetah', 'hamster'], [Fraction(3, 7), Fraction(3, 7), Fraction(-4, 7)])
+    #
+    print(answer('What is 4/7 wallaby, 1/4 parakeet and 3/5 perch?'))
+    'wallpaper'
+
+    print(answer('What is -1/3 ALPACA and -7/9 PARTRIDGE?'))
+    'CARTRIDGE'
+
+    print(answer('What is 3/7 Manatee, 3/7 cheetah and -4/7 hamster?'))
+    # 'Manchester'

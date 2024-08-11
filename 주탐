@@ -1,0 +1,32 @@
+import pandas as pd
+
+data = pd.read_csv('dices.csv')
+
+data = data.dropna()
+
+xdata = []
+
+for i, rows in data.iterrows():
+    xdata.append([rows['side'],rows['per']])
+
+ydata = data['result'].values
+
+import tensorflow as tf
+import numpy as np
+
+model = tf.keras.models.Sequential([
+    tf.keras.layers.Dense(64, activation='relu'),
+    tf.keras.layers.Dense(128, activation='relu'),
+    tf.keras.layers.Dense(1, activation= 'sigmoid')
+])
+
+model.compile(optimizer = 'adam', loss='binary_crossentropy', metrics=['accuracy'])
+
+model.fit(np.array(xdata), np.array(ydata), epochs=100)
+
+val = pd.DataFrame([[2,90]])
+pre_val = model.predict(val)
+print(pre_val)
+
+# [2,16] > [[0.9995482]] / [2,20] > [[0.9999168]] / [2,30] > [[0.99999994]] / [2,40] > [[1.]]
+# 0에 근접 > 조작 O / 1에 근접 > 조작 X

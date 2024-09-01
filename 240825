@@ -98,44 +98,56 @@ def successor(hidato,r,c):
 
 # last(): hidato를 넘겨받아 후속자를 찾는 행위를 진행하고 마지막으로 멈춘 위치를 튜플에 담아 반환하라.
 def last(hidato):
-    current = first(hidato)
+    current = first(hidato) #시작/현재 위치
+    suc = successor(hidato,current[0],current[1])
+    r = current[0]
+    c = current[1]
 
+    pre_cur = ()
+    for i in range(len(hidato) * len(hidato[0])-1):
+            suc = successor(hidato,r,c)
+            r = suc[0]
+            c = suc[1]
+            if r is None:
+                return pre_cur
+            pre_cur = (r,c)
+    return suc
 
-
-
-
-
-    return
 
 
 # hidato(): Hidato를 넘겨 받아 후속자를 찾는 행위를 진행하였을 때, 1에서 시작하여 마지막으로 도달한 위치의 값이
 # 총 셀 개수(행X열)과 같다면 True, 아니라면 False를 리턴하는 함수
 def hidato(Hidato):
-    return
+    total = len(Hidato) * len(Hidato[0])
+    lotate = last(Hidato)
+    if total == Hidato[lotate[0]][lotate[1]]:
+        return True
+    else:
+        return False
 
 
 #
-# print(first([[5, 4, 11, 12], [6, 10, 3, 2], [7, 8, 9, 1]]))
-# (2, 3)
-# print(first([[8, 14, 13, 12], [15, 1, 2, 11], [5, 3, 10, 16], [4, 6, 7, 9]]))
-# (1, 1)
-# print(first(((18, 19, 20, 4, 5), (17, 1, 3, 6, 8), (16, 13, 2, 9, 7), (14, 15, 12, 11, 10))))
-# (1, 1)
-# print(successor([[5, 4, 11, 12], [6, 10, 3, 2], [7, 8, 9, 1]], 2, 3))
-# (1, 3)
-# print(successor([[5, 4, 11, 12], [6, 10, 3, 2], [7, 8, 9, 1]], 1, 3))
-# (1, 2)
-# print(successor([[5, 4, 11, 2], [6, 10, 3, 12], [7, 8, 9, 1]], 2, 3))
-# (None, None)
+print(first([[5, 4, 11, 12], [6, 10, 3, 2], [7, 8, 9, 1]]))
+(2, 3)
+print(first([[8, 14, 13, 12], [15, 1, 2, 11], [5, 3, 10, 16], [4, 6, 7, 9]]))
+(1, 1)
+print(first(((18, 19, 20, 4, 5), (17, 1, 3, 6, 8), (16, 13, 2, 9, 7), (14, 15, 12, 11, 10))))
+(1, 1)
+print(successor([[5, 4, 11, 12], [6, 10, 3, 2], [7, 8, 9, 1]], 2, 3))
+(1, 3)
+print(successor([[5, 4, 11, 12], [6, 10, 3, 2], [7, 8, 9, 1]], 1, 3))
+(1, 2)
+print(successor([[5, 4, 11, 2], [6, 10, 3, 12], [7, 8, 9, 1]], 2, 3))
+(None, None)
 print(last([[5, 4, 11, 12], [6, 10, 3, 2], [7, 8, 9, 1]]))
 (0, 3)
 print(last([[8, 14, 13, 12], [15, 1, 2, 11], [5, 3, 10, 16], [4, 6, 7, 9]]))
 (3, 2)
 print(last(((18, 19, 20, 4, 5), (17, 1, 3, 6, 8), (16, 13, 2, 9, 7), (14, 15, 12, 11, 10))))
 (0, 2)
-# print(hidato([[5, 4, 11, 12], [6, 10, 3, 2], [7, 8, 9, 1]]))
-# True
-# print(hidato([[8, 14, 13, 12], [15, 1, 2, 11], [5, 3, 10, 16], [4, 6, 7, 9]]))
-# False
-# print(hidato(((18, 19, 20, 4, 5), (17, 1, 3, 6, 8), (16, 13, 2, 9, 7), (14, 15, 12, 11, 10))))
-# True
+print(hidato([[5, 4, 11, 12], [6, 10, 3, 2], [7, 8, 9, 1]]))
+True
+print(hidato([[8, 14, 13, 12], [15, 1, 2, 11], [5, 3, 10, 16], [4, 6, 7, 9]]))
+False
+print(hidato(((18, 19, 20, 4, 5), (17, 1, 3, 6, 8), (16, 13, 2, 9, 7), (14, 15, 12, 11, 10))))
+True

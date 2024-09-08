@@ -1,0 +1,79 @@
+import numpy as np
+
+def perceptron_AND(x1, x2):
+    #가중치
+    W = np.array([0.5,0.5])
+    #편향
+    b = -0.7
+    #입력값과 가중치의 내적 + 편향
+    z = np.dot(np.array([x1,x2]), W) + b
+    # > 첫번째 array 의 값 x 두번째 array(W)의 값 > x1 * w[0] , x2 * w[1]
+
+    #출력 z > 0 이면 1, 그렇지 않으면 0
+    return 1 if z > 0 else 0
+
+
+def perceptron_OR(x1, x2):
+    # 가중치
+    W = np.array([0.5, 0.5])
+    # 편향
+    b = -0.2
+    # 입력값과 가중치의 내적 + 편향
+    z = np.dot(np.array([x1, x2]), W) + b
+    # > 첫번째 array 의 값 x 두번째 array(W)의 값 > x1 * w[0] , x2 * w[1]
+
+    # 출력 z > 0 이면 1, 그렇지 않으면 0
+    return 1 if z > 0 else 0
+
+
+def perceptron_NOT(x):
+    # 가중치
+    W = np.array([-1.0])
+    # 편향
+    b = 0.5
+    # 입력값과 가중치의 내적 + 편향
+    z = np.dot(np.array([x]), W) + b
+    # > 내적 첫번째 array 의 값 x 두번째 array(W)의 값 > x1 * w[0] , x2 * w[1]
+
+    # 출력 z > 0 이면 1, 그렇지 않으면 0
+    return 1 if z > 0 else 0
+
+
+def perceptron_XOR(x1,x2):
+    num1 = perceptron_NOT(perceptron_AND(x1,x2))
+    num2 = perceptron_OR(x1,x2)
+
+    return perceptron_AND(num1,num2)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+print(perceptron_AND(0,0))
+print(perceptron_AND(0,1))
+print(perceptron_AND(1,0))
+print(perceptron_AND(1,1))
+print()
+print(perceptron_OR(0,0))
+print(perceptron_OR(0,1))
+print(perceptron_OR(1,0))
+print(perceptron_OR(1,1))
+print()
+print(perceptron_NOT(0))
+print(perceptron_NOT(1))
+print()
+print(perceptron_XOR(0,0))
+print(perceptron_XOR(0,1))
+print(perceptron_XOR(1,0))
+print(perceptron_XOR(1,1))

@@ -1,6 +1,6 @@
 import pandas as pd
 
-data = pd.read_csv('dices.csv')
+data = pd.read_csv('dices(0).csv')
 
 data = data.dropna()
 
@@ -22,11 +22,18 @@ model = tf.keras.models.Sequential([
 
 model.compile(optimizer = 'adam', loss='binary_crossentropy', metrics=['accuracy'])
 
-model.fit(np.array(xdata), np.array(ydata), epochs=100)
+model.fit(np.array(xdata), np.array(ydata), epochs=1000)
 
-val = pd.DataFrame([[2,90]])
+#예측할 데이터
+val = pd.DataFrame([[2,30]])
 pre_val = model.predict(val)
 print(pre_val)
 
 # [2,16] > [[0.9995482]] / [2,20] > [[0.9999168]] / [2,30] > [[0.99999994]] / [2,40] > [[1.]]
 # 0에 근접 > 조작 O / 1에 근접 > 조작 X
+
+# epochs = 1000
+# [2,17] > [[0.99785256]]
+# [2,19] > [[0.00124081]]
+# [2,16] > [[0.99546874]]
+# [2,15] > [[0.02784515]]

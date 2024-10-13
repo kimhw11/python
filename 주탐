@@ -37,3 +37,24 @@ print(pre_val)
 # [2,19] > [[0.00124081]]
 # [2,16] > [[0.99546874]]
 # [2,15] > [[0.02784515]]
+
+--------------------------------------------------------------------------------------
+
+def percentage(dices):
+    dict1 = {}
+    dict2 = {}
+    sums = sum(dices)
+    print(sums)
+    for i in range(1,7):
+        dict1[i] = 0
+        dict2[i] = 0
+
+    for k in range(6):
+
+        p1 = (dices[k] / sums)*100
+        p2 = round((dices[k] / sums)*100,1)
+        dict1[k+1] += p1
+        dict2[k+1] += p2
+    return f"반올림 X:{dict1}, 반올림 O:{dict2}"
+
+print(percentage([153,167,163,165,162,190]))

@@ -1,0 +1,50 @@
+# stack 구현하기
+class Element:
+    def __init__(self, data, link):
+        self.data = data
+        self.link = link
+
+class Stack:
+    # 생성자 함수
+    def __init__(self):
+        # 최상위 요소(element)를 가리키는 속성값
+        self.top = None
+
+    def peak(self):
+        if self.top is None:
+            return None
+        else:
+            return self.top.data
+
+
+
+    def push(self, val):
+        if self.top is None:
+            elem = Element(val,None)
+            self.top = elem
+
+        else:
+            elem = Element(val, self.top)
+            self.top = elem
+
+    def pop(self):
+        if self.top is None:
+            return None
+        else:
+            return_value = self.top.data
+            self.top = self.top.link
+            return return_value
+
+
+
+
+s = Stack()
+
+for i in range(1,6):
+    s.push(i)
+    print(s.peak())
+# 밑[1,2,3,4,5]
+print("\n")
+
+for _ in range(5):
+    print(s.pop())

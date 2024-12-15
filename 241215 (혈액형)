@@ -1,5 +1,3 @@
-main.py
-
 class Human:
     def __init__(self,bt_fm,sons_bt):
         self.bt_fm = bt_fm
@@ -17,20 +15,35 @@ class Human:
                 par_blood.append(bt_fm[list(bt_fm.keys())[i]])
             bt_fm[list(bt_fm.keys())[i]] = par_blood
 
-        return bt_fm # 부모가 A형, B형일 때 > {'Father': ['AA', 'AO'], 'Mother': ['BB', 'BO']}
+        return bt_fm # 부모가 A, B형일 때 > {'Father': ['AA', 'AO'], 'Mother': ['BB', 'BO']}
 
     # 자녀에게서 나올 수 있는 유전자형 구하기
     def sons_bt(self,parents_bt):
-        sons_blood = []
+        b = {1}
+        s1 = ''
+        s2 = ''
+        for i in parents_bt['Father']:
+            s1 += i
+        for k in parents_bt['Mother']:
+            s2 += k
 
-
-
-
+        for i in s1:
+            for k in s2:
+                if i == 'A':
+                    b.add(i + k)
+                elif i == 'B':
+                    if k == 'A':
+                        b.add(k + i)
+                    else:
+                        b.add(i + k)
+                else:
+                    b.add(k + i)
+        b.discard(1)
+        return f"자녀에게 나올 수 있는 유전자형: {b}"
 
 
 
 bt_fm = {'Father':input(), 'Mother':input()} #{'Father': 'A', 'Mother': 'B'}
-# parents_bt = Human(bt_fm).parents_bt()
 
 parents_bt = Human.parents_bt(Human,bt_fm)
 sons_bt = Human.sons_bt(Human,parents_bt)
@@ -38,16 +51,6 @@ sons_bt = Human.sons_bt(Human,parents_bt)
 print(parents_bt)
 print(sons_bt)
 
-# 아버지 혈액형 입력, 어머니 혈액형 입력받기 ( A or B or AB or O)
+# 아버지 혈액형 입력, 어머니 혈액형 입력받기 (A or B or AB or O)
 # 자녀에게서 나올 수 있는 ABO식 혈액형 유전자형의 종류
 
---------------------------------------------------------------------
-
-test
-
-from itertools import combinations
-
-l = [1,2,3]
-
-a =
-print(a)

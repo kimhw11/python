@@ -1,0 +1,21 @@
+from itertools import combinations_with_replacement
+
+n = int(input())
+
+strings = ['I','V','X','L']
+
+s_dict = {'I':1, 'V':5, 'X':10, 'L':50}
+
+s_list = list(combinations_with_replacement(strings,n))
+
+p_result = set()
+
+for k in s_list:
+    num = 0
+    for i in range(n):
+        num += s_dict[k[i]]
+    p_result.add(num)
+
+print(len(p_result))
+
+

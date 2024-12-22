@@ -54,3 +54,36 @@ print(sons_bt)
 # 아버지 혈액형 입력, 어머니 혈액형 입력받기 (A or B or AB or O)
 # 자녀에게서 나올 수 있는 ABO식 혈액형 유전자형의 종류
 
+class Human:
+    ABO_bloodType = {
+        "A": ["AA","AO"],
+        "B": ["BB","BO"],
+        "O": ["OO"],
+        "AB":["AB"]}
+    def __init__(self, bloodType = None):
+        self.bloodType = bloodType
+        self.Dad = None
+        self.Mom = None
+
+    def set_parent(self, Dad=None, Mom=None):
+        self.Dad = Dad
+        self.Mom = Mom
+
+    def get_my_bloodType(self):
+        dad_bloodType = self.Dad.get_my_bloodType() if self.Dad else None
+        mom_bloodType = self.Mom.get_my_bloodType() if self.Mom else None
+
+        if self.bloodType:
+            if self.bloodType == 'O' and (dad_bloodType == 'AB' and mom_bloodType == 'O') or (dad_bloodType == 'O' and mom_bloodType == 'AB'):
+                return "Cis-AB"
+            return self.bloodType
+        else:
+            raise AttributeError("혈액형 정보가 정확하지 않습니다")
+A = Human(input())
+B = Human(input())
+C = Human(input())
+C.set_parent(A,B)
+print(C.get_my_bloodType())
+
+
+

@@ -1,89 +1,57 @@
 class Human:
-    def __init__(self,bt_fm,sons_bt):
-        self.bt_fm = bt_fm
-        self.sons_bt = sons_bt
-
-    def parents_bt(self,bt_fm):
-        for i in range(len(list(bt_fm.keys()))):
-            par_blood = []
-            if len(bt_fm[list(bt_fm.keys())[i]]) == 1:
-                if bt_fm[list(bt_fm.keys())[i]] * 2 not in par_blood:
-                    par_blood.append(bt_fm[list(bt_fm.keys())[i]] * 2)
-                if bt_fm[list(bt_fm.keys())[i]] + 'O' not in par_blood:
-                    par_blood.append(bt_fm[list(bt_fm.keys())[i]] + 'O')
-            else:
-                par_blood.append(bt_fm[list(bt_fm.keys())[i]])
-            bt_fm[list(bt_fm.keys())[i]] = par_blood
-
-        return bt_fm # 부모가 A, B형일 때 > {'Father': ['AA', 'AO'], 'Mother': ['BB', 'BO']}
-
-    # 자녀에게서 나올 수 있는 유전자형 구하기
-    def sons_bt(self,parents_bt):
-        b = {1}
-        s1 = ''
-        s2 = ''
-        for i in parents_bt['Father']:
-            s1 += i
-        for k in parents_bt['Mother']:
-            s2 += k
-
-        for i in s1:
-            for k in s2:
-                if i == 'A':
-                    b.add(i + k)
-                elif i == 'B':
-                    if k == 'A':
-                        b.add(k + i)
-                    else:
-                        b.add(i + k)
-                else:
-                    b.add(k + i)
-        b.discard(1)
-        return f"자녀에게 나올 수 있는 유전자형: {b}"
-
-
-
-bt_fm = {'Father':input(), 'Mother':input()} #{'Father': 'A', 'Mother': 'B'}
-
-parents_bt = Human.parents_bt(Human,bt_fm)
-sons_bt = Human.sons_bt(Human,parents_bt)
-
-print(parents_bt)
-print(sons_bt)
-
-# 아버지 혈액형 입력, 어머니 혈액형 입력받기 (A or B or AB or O)
-# 자녀에게서 나올 수 있는 ABO식 혈액형 유전자형의 종류
-
-class Human:
     ABO_bloodType = {
         "A": ["AA","AO"],
         "B": ["BB","BO"],
         "O": ["OO"],
         "AB":["AB"]}
+
     def __init__(self, bloodType = None):
         self.bloodType = bloodType
         self.Dad = None
         self.Mom = None
+        self.Son = None
 
-    def set_parent(self, Dad=None, Mom=None):
+    def set_parent(self, Dad=None, Mom=None, Son=None):
         self.Dad = Dad
         self.Mom = Mom
+        self.Son = Son
+
 
     def get_my_bloodType(self):
-        dad_bloodType = self.Dad.get_my_bloodType() if self.Dad else None
-        mom_bloodType = self.Mom.get_my_bloodType() if self.Mom else None
+        dad_bloodType = self.ABO_bloodType[self.Dad.bloodType]
+        mom_bloodType = self.ABO_bloodType[self.Mom.bloodType]
+        son_bloodType = self.ABO_bloodType[self.Son.bloodType]
 
         if self.bloodType:
-            if self.bloodType == 'O' and (dad_bloodType == 'AB' and mom_bloodType == 'O') or (dad_bloodType == 'O' and mom_bloodType == 'AB'):
-                return "Cis-AB"
-            return self.bloodType
+            if self.bloodType == 'O' and (dad_bloodType[0] == 'AB' and mom_bloodType[0] == 'OO') or (
+                    dad_bloodType[0] == 'OO' and mom_bloodType[0] == 'AB'):
+                return "Cis-AB형"
+
+            else:
+                possible_bloodType = set()
+                # 가능한 혈액형 판단
+                for d_bloodType in dad_bloodType:
+                    for m_bloodType in mom_bloodType:
+                        for dbt in d_bloodType:
+                            for mbt in m_bloodType:
+                                new_bloodType = ''.join(sorted([dbt, mbt]))
+                                possible_bloodType.add(new_bloodType)
+                print(possible_bloodType)
+
+                flag = False
+                for s_bloodType in son_bloodType:
+                    if s_bloodType in possible_bloodType:
+                        flag = True
+
+                if flag:
+                    return "돌연변이의 가능성 적음"
+                else:
+                    return "다른 돌연변이일 가능성 높음"
         else:
-            raise AttributeError("혈액형 정보가 정확하지 않습니다")
+            return None
+
 A = Human(input())
 B = Human(input())
 C = Human(input())
-C.set_parent(A,B)
+C.set_parent(A,B,C)
 print(C.get_my_bloodType())
-
-
-

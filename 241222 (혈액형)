@@ -25,7 +25,7 @@ class Human:
         if self.bloodType:
             if self.bloodType == 'O' and (dad_bloodType[0] == 'AB' and mom_bloodType[0] == 'OO') or (
                     dad_bloodType[0] == 'OO' and mom_bloodType[0] == 'AB'):
-                return "Cis-AB형"
+                return "Cis-AB형 유전"
 
             else:
                 possible_bloodType = set()

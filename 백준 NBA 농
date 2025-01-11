@@ -1,0 +1,35 @@
+n = int(input())
+
+score = [0,0]
+#각 팀이 이기고있던 시간 저장
+win_time = [0,0]
+#각 팀의 가장 최근 득점 시간
+pre_goal = [0,0]
+
+for i in range(n):
+    team,time = input().split()
+    #시간을 분,초로 나누어 저장 후 time을 초로 환산
+    m,s = map(int,time.split(':'))
+    time = m * 60 + s
+
+    #스코어비교
+    if score[0] > score[1]:
+        win_time[0] += time - pre_goal[0]
+        pre_goal[0] = time
+    elif score[0] < score[1]:
+        win_time[1] += time - pre_goal[1]
+        pre_goal[1] = time
+
+    #최근 득점 시간에 저장
+    pre_goal[int(team)-1] = time
+    score[int(team)-1] += 1
+
+#경기가 끝난후(반복문이 끝난 후) 이기고 있던 팀과 시간 계산
+if score[0] > score[1]:
+    win_time[0] += 48*60 - pre_goal[0]
+elif score[0] < score[1]:
+    win_time[1] += 48*60 - pre_goal[1]
+
+for i in range(2):
+    print("%02d:%02d" %(win_time[i] // 60, win_time[i] % 60))
+

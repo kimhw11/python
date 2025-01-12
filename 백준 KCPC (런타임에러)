@@ -1,0 +1,85 @@
+import sys
+
+input = sys.stdin.readline
+
+T = int(input()) #테스트 데이터 갯수
+
+while T != 0: #봐야 할 테스트 데이터가 남아있을 때
+    #팀의 수 / 문제수 / 내 팀의 ID / 로그의 갯수
+    n,k,t,m = map(int,input().split())
+
+    #각 팀이 푼 문제 & 그 문제에 대한 최고점수
+    dict_score = {} #{1: {1: 0, 2: 0, 3: 0}, 2: {1: 0, 2: 0, 3: 0}, 3: {1: 0, 2: 0, 3: 0}}
+    for team in range(1,n+1):
+        dict_score[team] = {} #문제 번호 & 최고 점수를 저장할 딕셔너리
+        for team2 in range(1,n+1):
+            dict_score[team][team2] = 0
+
+    #각 팀이 풀이를 제출한 횟수 & 마지막 제출 시간(1 > 2 > 3 > 4.. 즉 1번이 가장 빠른 제출
+    dict_log = {} # {1: (0, 0), 2: (0, 0), 3: (0, 0)} / {1: (0, 0), 2: (0, 0), 3: (0, 0), 4: (0, 0)}
+    for team in range(1,n+1):
+        dict_log[team] = [0,0]
+
+    num = 1 #제출 순서를 저정할 변수
+    for log in range(m):
+        #제출한 팀의 ID / 문제 번호 / 획득한 점수
+        i,j,s = map(int,input().split())
+        #점수 추가
+        #이번에 받은 점수가 기존 문제의 최고점수보다 높다면 그 문제에 대한 점수 바꿔주기
+        if s >= dict_score[i][j]:
+            dict_score[i][j] = s
+        #풀이 제출 횟수 증가, 마지막 제출 변수 저장
+        dict_log[i][0] += 1
+        dict_log[i][1] = num
+
+        num += 1
+
+    # #순위 계산 -> 점수 높은팀 > 제출 횟수 적은팀 > 마지막 제출 빠른 팀
+    #각 팀의 최종 총점 계산
+    new_dict_score = {}
+    for team in range(1,n+1):
+        new_dict_score[team] = sum(list(dict_score[team].values()))
+
+    data = []
+    value = []
+    for team in range(1,n+1):
+        #팀 번호 입력
+        value.append(team)
+        # 총점 입력
+        value.append(new_dict_score[team])
+        #제출 횟수, 마지막 제출 시간 입력
+        value.append(dict_log[team][0])
+        value.append(dict_log[team][1])
+
+        data.append(value)
+        value = []
+
+    data.sort(key=lambda x:(-x[1],x[2],x[3]))
+
+    num2 = 1
+    for i in data:
+        if i[0] == t:
+            print(num2)
+        else:
+            num2 += 1
+    T -= 1
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

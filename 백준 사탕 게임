@@ -1,0 +1,31 @@
+N = int(input())
+
+board = [] # [['C', 'C', 'P'], ['C', 'C', 'P'], ['P', 'P', 'C']]
+
+for _ in range(N):
+    c = input()
+    board.append([x for x in c])
+
+#검증 함수에 교환한 사탕 보드 전달
+def ver(c_board):
+
+
+
+for i in range(N):
+    for k in range(N-1):
+        #가로 교환 / 범위 조건 확인, 인접한 두 사탕의 색이 다를 때 > 교환 진행
+        if k + 1 < N and board[i][k] != board[i][k+1]:
+            board[i][k],board[i][k+1] = board[i][k+1],board[i][k]
+            #가장 긴 연속 부분 확인
+            pass
+            #되돌리기
+            board[i][k],board[i][k+1] = board[i][k+1],board[i][k]
+        #세로 교환
+        if i + 1 < N and board[i][k] != board[i+1][k]:
+            board[i][k],board[i+1][k] = board[i+1][k],board[i][k]
+            # 가장 긴 연속 부분 확인
+            pass
+            #되돌리기
+            board[i][k], board[i + 1][k] = board[i + 1][k], board[i][k]
+
+

@@ -1,0 +1,42 @@
+import sys
+input = sys.stdin.readline
+
+key = input().rstrip()
+s_code = input().rstrip()
+
+l_key = sorted(key)
+
+strs = []
+idx = 0
+for _ in range(len(key)):
+    strs.append(s_code[idx:idx + len(s_code) // len(key)])
+    idx += len(s_code) // len(key)
+
+d = {}
+for i in range(len(l_key)):
+    if l_key[i] in d.keys():
+        d[l_key[i]+str(i)] = strs[i]
+    else:
+        d[l_key[i]] = strs[i]
+
+result = []
+
+for i in key:
+    right_list = []
+    for k in d.keys():
+        if i in k:
+            right_list.append((k,d[k]))
+            break
+    if right_list:
+        result.append(d[right_list[0][0]])
+        d.pop(right_list[0][0])
+
+result2 = ''
+
+idx2 = 0
+for k in range(len(s_code)//len(key)):
+    for i in result:
+        result2 += i[idx2]
+    idx2 += 1
+
+print(result2)

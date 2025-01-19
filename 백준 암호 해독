@@ -40,3 +40,31 @@ for k in range(len(s_code)//len(key)):
     idx2 += 1
 
 print(result2)
+
+KEY = input()
+# # EYDEMBLRTHANMEKTETOEEOTH
+# encoding_str = input()
+# 
+# sortedKEY = sorted(KEY) # ABBOY
+# seperated_str = []
+# l = len(encoding_str) // len(KEY)
+# 
+# for i in range(0,len(encoding_str),l):
+#     seperated_str.append(encoding_str[i:i+l])
+# 
+# linked = []
+# for i in range(len(KEY)):
+#     linked.append([sortedKEY[i], seperated_str[i]])
+# 
+# # 결과값: MEETMEBYTHEOLDOAKTREENTH
+# 
+# answer = ""
+# for k in KEY:   # BATBOY
+#     for key,value in linked: # [['A', 'EYDE'], ['B0', 'MBLR'], ['B1', 'THAN'], ['O', 'MEKT'], ['T', 'ETOE'], ['Y', 'EOTH']]
+#         if k == key:
+#             answer += value
+#             linked.remove([key,value])
+#             break
+# 
+# for i in range(l):
+#     print(answer[i::l],end='')

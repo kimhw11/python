@@ -1,0 +1,38 @@
+import sys
+
+input = sys.stdin.readline
+
+dictionary = []
+
+def calculate(b,d): #board,dictionary
+    new_d = d
+    new_b = sorted([x for x in set(b)])
+    for center in new_b: # 집합을 사용해 중복되는 센터문자 제거
+        #사전에서 센터문자를 포함하지 않는 문자 제거 > 만들 수 있는 문자만 남기기
+        for word in d:
+            if center in word:
+                new_d.append(word)
+        print(center,new_d)
+    return True
+
+flag = True
+while flag:
+    s = input().rstrip()
+    if s == '-':
+        flag = False
+    else:
+        dictionary.append(s)
+
+board = []
+flag2 = True
+while flag2:
+    p = input().rstrip()
+    if p == '#':
+        flag2 = False
+    else:
+        board.append(p)
+
+# 정답 출력을 위한 for문
+for i in board:
+    calculate(i,dictionary)
+

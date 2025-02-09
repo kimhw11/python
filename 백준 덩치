@@ -1,0 +1,36 @@
+import sys
+from itertools import combinations
+
+input = sys.stdin.readline
+
+N = int(input().rstrip())
+
+peoples = [] # (사람번호,키,몸무게) 형태로 저장
+#[(1, 55, 185), (2, 58, 183), (3, 88, 186), (4, 60, 175), (5, 46, 155)]
+
+# 각 사람마다 자신 보다 덩치가 큰 사람수 저장
+dict_rank = {}
+
+for i in range(1,N+1):
+    x,y = map(int,input().rstrip().split())
+    peoples.append((i,x,y))
+    # 각 사람의 덩치 순위는 자신보다 덩치가 큰 사람 수 + 1이기에 0을 할당해 + 1
+    dict_rank[i] = [0]
+
+a = list(combinations([x for x in range(1,N+1)],2))
+
+for k in a:
+    p,q = peoples[k[0]-1],peoples[k[1]-1]
+    #p의 몸무게, 키 > q의 몸무게, 키
+    if p[1] > q[1] and p[2] > q[2]:
+        if q[0] not in dict_rank[p[0]]:
+            dict_rank[q[0]].append(p[0])
+    elif q[1] > p[1] and q[2] > p[2]:
+        if p[0] not in dict_rank[q[0]]:
+            dict_rank[p[0]].append(q[0])
+
+result = []
+for i in range(1,N+1):
+    result.append(len(dict_rank[i]))
+
+print(*result)

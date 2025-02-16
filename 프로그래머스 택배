@@ -1,0 +1,45 @@
+from collections import deque
+
+def solution(cap, n, deliveries, pickups):
+    dict = {}
+    remain = deque()
+    for i in range(1,n+1):
+        dict[i] = deliveries[i-1],pickups[i-1]
+        remain.append(i)
+    remain.reverse()
+
+    loc = 0 #트럭 위치
+
+    # 물류창고 > 각 집
+    def deliver(loc):
+        #방문해야할 가장 먼 거리의 집 > remain[0]
+        box = 0
+        house = [] #이번 이동에 방문해야 할 집
+        while box < cap:
+            box += deliveries[i-1]
+            house.append(i)
+        for i in
+
+
+    # 각 집 > 물류창고
+    def pickup(loc):
+        pass
+
+    result = 0
+    while remain:
+        r = remain.copy()
+        if loc == 0: #배송을 시작해야 하므로 deliver 함수 실행
+
+        else: # 물류창고로 돌아가며 택배를 수거해야 하므로 pickup 함수 실행
+
+
+    return
+
+
+
+
+
+print(solution(4,5,[1, 0, 3, 1, 2],[0, 3, 0, 4, 0]))
+# 최대 수용량, 집 개수, 배달할, 수거할
+
+# 이동거리가 큰 집부터 먼저 처리 n > n-1 > n-2 ....

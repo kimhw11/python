@@ -1,0 +1,41 @@
+from collections import deque
+
+board1 = [] # ['LLLL',
+             # 'PPPP',
+#              'LLLP',
+#              'PPLP']
+
+board2 = [] # ['LPLP',
+            #  'PLPL',
+#              'LPLP',
+#              'PLPL']
+
+for i in range(9):
+    l = input()
+    if i < 4:
+        board1.append(l)
+    elif i >= 4 and len(l) != 0:
+        board2.append(l)
+
+d = deque()
+d.append((0,0)) #초기좌표
+
+offset = [(1,0),(0,1)] # 아래,오른쪽만 확인
+
+answer = 0
+
+while d:
+    x,y = d.popleft() #현재좌표
+    if board1[x][y] != board2[x][y]:
+        for nx,ny in offset:
+            n_x,n_y = x + nx, y + ny # 비교할 좌표
+            if n_x < 4 and n_y < 4:
+                if board1[x][y] == board2[n_x][n_y] and board1[n_x][n_y] == board2[x][y]:
+                    board1[x][y],board1[n_x][n_y] = board1[n_x][n_y]
+                    answer += 1
+                    d.append((n_x,n_y))
+    else:
+        print(1)
+        continue
+
+print(answer)

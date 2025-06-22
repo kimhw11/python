@@ -1,0 +1,70 @@
+import pandas as pd
+import torch
+import torch.nn as nn
+from torch.utils.data import Dataset, DataLoader
+import numpy as np
+
+# 1. 학습용 CSV 데이터 로딩
+df = pd.read_csv('PM_test.csv')
+
+input_cols = ['1', '2', '3', '4', '5', '6']
+target_col = '7'
+
+X = df[input_cols].values.astype('float32')
+y = df[target_col].values.astype('float32')
+
+# 2. PyTorch Dataset 정의
+class SequenceDataset(Dataset):
+    def __init__(self, X, y):
+        self.X = torch.tensor(X).unsqueeze(2)  # (samples, timesteps, 1)
+        self.y = torch.tensor(y).unsqueeze(1)  # (samples, 1)
+
+    def __len__(self):
+        return len(self.X)
+
+    def __getitem__(self, idx):
+        return self.X[idx], self.y[idx]
+
+dataset = SequenceDataset(X, y)
+loader = DataLoader(dataset, batch_size=1, shuffle=False)
+
+# 3. LSTM 모델 정의
+class LSTMModel(nn.Module):
+    def __init__(self, input_size=1, hidden_size=50, output_size=1):
+        super().__init__()
+        self.lstm = nn.LSTM(input_size, hidden_size, batch_first=True)
+        self.fc = nn.Linear(hidden_size, output_size)
+
+    def forward(self, x):
+        out, _ = self.lstm(x)
+        return self.fc(out[:, -1, :])
+
+device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+
+model = LSTMModel().to(device)
+criterion = nn.MSELoss()
+optimizer = torch.optim.Adam(model.parameters(), lr=0.01)
+
+# 4. 학습
+for epoch in range(200):
+    print(f"Epoch {epoch + 1}")
+    for seq, target in loader:
+        seq, target = seq.to(device), target.to(device)
+        output = model(seq)
+        loss = criterion(output, target)
+        optimizer.zero_grad()
+        loss.backward()
+        optimizer.step()
+
+# 5. 예측: 새로운 시퀀스를 직접 배열로 입력
+new_input = [10, 31, 42, 44, 75, 13]  # 예측에 사용할 새로운 입력값
+input_tensor = torch.tensor(new_input, dtype=torch.float32).unsqueeze(0).unsqueeze(2).to(device)
+
+model.eval()
+with torch.no_grad():
+    prediction = model(input_tensor).item()
+
+print(f"예측된 다음 미세먼지 농도: {prediction:.1f}")
+
+# [60, 62, 65, 64, 68, 70] > 39.74
+# [10, 31, 42, 44, 75, 13] > 20.2

@@ -4,8 +4,10 @@ import torch.nn as nn
 from torch.utils.data import Dataset, DataLoader
 import numpy as np
 
+from t import col1_list, row_lists
+
 # 1. 학습용 CSV 데이터 로딩
-df = pd.read_csv('PM_test.csv')
+df = pd.read_csv('PM_train.csv')
 
 input_cols = ['1', '2', '3', '4', '5', '6']
 target_col = '7'
@@ -46,7 +48,7 @@ criterion = nn.MSELoss()
 optimizer = torch.optim.Adam(model.parameters(), lr=0.01)
 
 # 4. 학습
-for epoch in range(200):
+for epoch in range(500):
     print(f"Epoch {epoch + 1}")
     for seq, target in loader:
         seq, target = seq.to(device), target.to(device)
@@ -56,15 +58,19 @@ for epoch in range(200):
         loss.backward()
         optimizer.step()
 
-# 5. 예측: 새로운 시퀀스를 직접 배열로 입력
-new_input = [10, 31, 42, 44, 75, 13]  # 예측에 사용할 새로운 입력값
-input_tensor = torch.tensor(new_input, dtype=torch.float32).unsqueeze(0).unsqueeze(2).to(device)
+# 5. 예측
+df_t = pd.read_csv('PM_test.csv')
 
-model.eval()
-with torch.no_grad():
-    prediction = model(input_tensor).item()
+col1_list = df_t['1'].tolist()
+lists = [df_t[str(i)].tolist() for i in range(1,7)]
+row_lists = df_t.values.tolist()
 
-print(f"예측된 다음 미세먼지 농도: {prediction:.1f}")
+for i in row_lists:
+    new_input = i  # 예측에 사용할 새로운 입력값
+    input_tensor = torch.tensor(new_input, dtype=torch.float32).unsqueeze(0).unsqueeze(2).to(device)
 
-# [60, 62, 65, 64, 68, 70] > 39.74
-# [10, 31, 42, 44, 75, 13] > 20.2
+    model.eval()
+    with torch.no_grad():
+        prediction = model(input_tensor).item()
+
+    print(f"예측된 다음 미세먼지 농도: {prediction:.1f}, {new_input}")
